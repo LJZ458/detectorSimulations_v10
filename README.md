@@ -24,17 +24,30 @@ To setup the simulation package on a computer with GEANT4 already present, just 
     
 Then you'll need to get the files containing our NDA-protected parameters. To do this register on gitlab.com, have your account added to the GRIFFINCollaboration, and register your ssh-keys with gitlab. Then you can run the script SetupSuppressed.sh (in the detectorSimulation_v10 folder). This script can either be run as is, which will install the suppressed files in a sub-folder "suppressed" and create symbolic links in the src directory, or you can give it the path of the directory where you want the suppressed files installed (this directory has to be empty!).
 
-### Building
+### Building with Geant4 11
 
-The build process is pretty standard for a geant simulation; in a build directory (ie any clean new directory that isn't the source directory), do 
+Use CMake for this branch. The legacy `GNUmakefile` depends on Geant4's removed
+makefile infrastructure and is not supported by Geant4 11. No `G4ROOT`
+environment variable is required.
 
+First initialize the Geant4 and ROOT environments, then configure a clean build
+directory with the Geant4 CMake package location:
+
+```bash
+source /path/to/geant4-install/bin/geant4.sh
+source /path/to/root/bin/thisroot.sh
+
+cmake -S /path/to/detectorSimulations_v10 -B build \
+  -DGeant4_DIR=/path/to/geant4-install/lib/Geant4-11.x
+cmake --build build --parallel
 ```
-cmake path/to/detectorSimulations
-make clean
-make
-```
 
-Keep in mind that cmake does not regenerate all the files it uses every time it runs!  So if something changes and this build process suddenly fails, try deleting the build directory and starting over.
+Use `-DWITH_GEANT4_UIVIS=OFF` if Geant4 was built without UI and visualization
+drivers. The NDA-protected files installed by `SetupSuppressed.sh` are required
+to link the full detector executable.
+
+If CMake has previously configured the directory against another Geant4
+installation, use a new build directory rather than reusing its cache.
 
 ### Setup FAQ
 

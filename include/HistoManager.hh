@@ -36,7 +36,7 @@
 #define HISTOMANAGER_HH
 
 #include "globals.hh"
-#include "G4RootAnalysisManager.hh"
+#include "G4AnalysisManager.hh"
 #include "g4hntools_defs.hh"
 
 #include "G4SystemOfUnits.hh" // new version geant4.10 requires units
@@ -124,8 +124,8 @@ public:
 	void FileName(G4String val) { fFileName = val; }
 
 private:
-	void MakeHistogram(G4RootAnalysisManager* analysisManager, G4String filename,  G4String title, G4double xmin, G4double xmax, G4int nbins);
-	void Make2DHistogram(G4RootAnalysisManager* analysisManager, const G4String& name, const G4String& title,
+	void MakeHistogram(G4AnalysisManager* analysisManager, G4String filename,  G4String title, G4double xmin, G4double xmax, G4int nbins);
+	void Make2DHistogram(G4AnalysisManager* analysisManager, const G4String& name, const G4String& title,
 	             G4int nxbins, G4double xmin, G4double xmax,
 	             G4int nybins, G4double ymin, G4double ymax);
 
@@ -576,4 +576,3 @@ enum HISTONAME
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
