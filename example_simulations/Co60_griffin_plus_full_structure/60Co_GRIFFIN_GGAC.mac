@@ -15,6 +15,27 @@
 # This command must be issued after /run/initialize.
 /process/had/rdm/thresholdForVeryLongDecayTime 1.0e60 year
 
+#################### Optional user nuclear data #############################
+# By default, the simulation reads Co-60 decay data from G4RADIOACTIVEDATA and
+# Ni-60 level/transition data from G4LEVELGAMMADATA.
+#
+# To override either dataset, uncomment the corresponding command and replace
+# the example with an absolute path. Keep these commands after /run/initialize
+# and before /run/beamOn. The evaporation file is for the daughter Ni-60
+# nucleus (Z=28), not the Co-60 parent (Z=27).
+#
+#/process/had/rdm/setRadioactiveDecayFile 27 60 /absolute/path/to/co60_decay.dat
+#/process/had/rdm/setPhotoEvaporationFile 28 60 /absolute/path/to/z28.a60
+#
+# The photon-evaporation file must use the Geant4 11 level-data format and
+# contain spin, multipolarity, and mixing-ratio values for angular correlations.
+# Do not load the legacy 17-column UserEvapData_z28.a60 directly. Convert a
+# legacy evaporation file plus its multipole file with the extension tool:
+#
+# python3 /path/to/Geant4GammaGammaAngularCorrelations10.01/tools/convert_legacy_level_data.py \
+#   --evap UserEvapData_z28.a60 --multipoles Ni60Multipoles.dat \
+#   --ground-spin 0 --output z28.a60
+
 ############################ Output ##########################################
 /Histo/FileName Co60_GRIFFIN_GGAC
 /Histo/RecordGun true
@@ -65,8 +86,7 @@
 /DetSys/app/addGriffinStructure 0
 
 ############################ Co-60 source ####################################
-# A stationary Co-60 ion at the array centre. Standard Geant4 11 decay and
-# photon-evaporation data are used; no legacy UserData files are loaded.
+# A stationary Co-60 ion at the array centre.
 /gun/particle ion
 /gun/ion 27 60
 /DetSys/gun/position 0 0 0 mm
