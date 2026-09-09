@@ -1,0 +1,82 @@
+# Co-60 decay at the centre of the standard 16-clover GRIFFIN array.
+# Uses Geant4 11 photon-evaporation data and gamma-gamma angular correlations.
+# Run from the build directory with:
+#   ./Griffinv10 /absolute/path/to/60Co_GRIFFIN_GGAC.mac 1
+
+############################ Physics #########################################
+# All de-excitation configuration must be set before /run/initialize.
+/process/had/deex/correlatedGamma true
+/process/had/deex/maxTwoJ 20
+/DetSys/phys/SelectPhysics emlivermore
+
+/run/initialize
+
+# Geant4 11.2 and newer otherwise ignore decays sampled later than one year.
+# This command must be issued after /run/initialize.
+/process/had/rdm/thresholdForVeryLongDecayTime 1.0e60 year
+
+############################ Output ##########################################
+/Histo/FileName Co60_GRIFFIN_GGAC
+/Histo/RecordGun true
+/Histo/RecordAll true
+
+############################ GRIFFIN geometry ################################
+# Standard full array: 16 clovers at 11 cm with forward extension suppressors.
+# Set SetCustomShieldsPresent to 0 for an unsuppressed array.
+/DetSys/det/SetCustomShieldsPresent 1
+/DetSys/det/SetCustomRadialDistance 11 cm
+/DetSys/det/SetCustomExtensionSuppressorLocation 0
+/DetSys/det/includeGriffinHevimet 0
+
+/DetSys/det/SetCustomPosition 1 1 0
+/DetSys/det/addGriffinCustomDetector 1
+/DetSys/det/SetCustomPosition 2 2 0
+/DetSys/det/addGriffinCustomDetector 2
+/DetSys/det/SetCustomPosition 3 3 0
+/DetSys/det/addGriffinCustomDetector 3
+/DetSys/det/SetCustomPosition 4 4 0
+/DetSys/det/addGriffinCustomDetector 4
+/DetSys/det/SetCustomPosition 5 5 0
+/DetSys/det/addGriffinCustomDetector 5
+/DetSys/det/SetCustomPosition 6 6 0
+/DetSys/det/addGriffinCustomDetector 6
+/DetSys/det/SetCustomPosition 7 7 0
+/DetSys/det/addGriffinCustomDetector 7
+/DetSys/det/SetCustomPosition 8 8 0
+/DetSys/det/addGriffinCustomDetector 8
+/DetSys/det/SetCustomPosition 9 9 0
+/DetSys/det/addGriffinCustomDetector 9
+/DetSys/det/SetCustomPosition 10 10 0
+/DetSys/det/addGriffinCustomDetector 10
+/DetSys/det/SetCustomPosition 11 11 0
+/DetSys/det/addGriffinCustomDetector 11
+/DetSys/det/SetCustomPosition 12 12 0
+/DetSys/det/addGriffinCustomDetector 12
+/DetSys/det/SetCustomPosition 13 13 0
+/DetSys/det/addGriffinCustomDetector 13
+/DetSys/det/SetCustomPosition 14 14 0
+/DetSys/det/addGriffinCustomDetector 14
+/DetSys/det/SetCustomPosition 15 15 0
+/DetSys/det/addGriffinCustomDetector 15
+/DetSys/det/SetCustomPosition 16 16 0
+/DetSys/det/addGriffinCustomDetector 16
+
+# Complete upstream and downstream GRIFFIN support structure.
+/DetSys/app/addGriffinStructure 0
+
+############################ Co-60 source ####################################
+# A stationary Co-60 ion at the array centre. Standard Geant4 11 decay and
+# photon-evaporation data are used; no legacy UserData files are loaded.
+/gun/particle ion
+/gun/ion 27 60
+/DetSys/gun/position 0 0 0 mm
+/process/had/rdm/nucleusLimits 60 60 27 27
+
+############################ Verbosity and run ###############################
+/control/verbose 1
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+# Increase this for production statistics.
+/run/beamOn 10000
